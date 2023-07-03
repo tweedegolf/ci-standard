@@ -1,0 +1,36 @@
+name: "Cargo Cache"
+description: "Caches and restore your Rust build artefacts"
+inputs:
+  policy:
+    description: "Whether to just 'pull' the cache, or also 'push' it"
+    default: push
+
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/checkout@v3
+    - uses: 'actions/cache@v3'
+      if: ${{ inputs.policy != 'pull' }}
+      with:
+        path: |
+          .cargo/bin/
+          .cargo/registry/index/
+          .cargo/registry/cache/
+          .cargo/git/db/
+          target
+        key: cargo-${{ hashFiles('**/Cargo.lock') }}
+        restore-keys: |
+          cargo-
+
+    - uses: 'actions/cache/restore@v3'
+      if: ${{ inputs.policy == 'pull' }}
+      with:
+        path: |
+          .cargo/bin/
+          .cargo/registry/index/
+          .cargo/registry/cache/
+          .cargo/git/db/
+          target
+        key: cargo-${{ hashFiles('**/Cargo.lock') }}
+        restore-keys: |
+          cargo-
