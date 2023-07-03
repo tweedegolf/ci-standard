@@ -60,8 +60,8 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - uses: ./.github/actions/cargo-cache
-      with:
-        policy: pull
+      # with:
+      #   policy: pull
     - run: |
         cargo install cargo-deny || true
     - run: cargo deny --all-features check
@@ -72,8 +72,8 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - uses: ./.github/actions/cargo-cache
-      with:
-        policy: pull
+      # with:
+      #   policy: pull
     - run: |
         cargo install cargo-udeps || true
         rustup toolchain install nightly
