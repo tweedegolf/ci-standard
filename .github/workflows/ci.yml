@@ -1,0 +1,112 @@
+name: CI Standard
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+  pull_request:
+
+env:
+  CARGO_HOME: .cargo
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/cache@v3
+      with:
+        path: |
+          .cargo
+          target
+        key: cache-${{ hashFiles('**/Cargo.lock') }}
+        restore-keys: cache-
+    - run: cargo build --all-features --all-targets --release
+
+  format:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/cache/restore@v3
+      with:
+        path: |
+          .cargo
+          target
+        key: cache-${{ hashFiles('**/Cargo.lock') }}
+        restore-keys: cache-
+    - run: cargo fmt --all -- --check
+
+  check:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/cache/restore@v3
+      with:
+        path: |
+          .cargo
+          target
+        key: cache-${{ hashFiles('**/Cargo.lock') }}
+        restore-keys: cache-
+    - run: cargo check --all-features --all-targets -- --check
+
+  clippy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/cache/restore@v3
+      with:
+        path: |
+          .cargo
+          target
+        key: cache-${{ hashFiles('**/Cargo.lock') }}
+        restore-keys: cache-
+    - run: cargo clippy --all-features --all-targets -- --deny clippy::all
+
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/cache/restore@v3
+      with:
+        path: |
+          .cargo
+          target
+        key: cache-${{ hashFiles('**/Cargo.lock') }}
+        restore-keys: cache-
+    - run: cargo test --all-features --all-targets
+
+  deny:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/cache/restore@v3
+      with:
+        path: |
+          .cargo
+          target
+        key: cache-${{ hashFiles('**/Cargo.lock') }}
+        restore-keys: cache-
+    - run: cargo deny --all-features check advisories bans sources
+
+  udeps:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/cache/restore@v3
+      with:
+        path: |
+          .cargo
+          target
+        key: cache-${{ hashFiles('**/Cargo.lock') }}
+        restore-keys: cache-
+    - run: |
+        cargo install cargo-udeps || true
+        rustup toolchain install nightly
+        rustup default nightly
+    - run: cargo udeps --all-features --all-targets
