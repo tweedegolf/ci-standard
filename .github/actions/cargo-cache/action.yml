@@ -2,15 +2,15 @@ name: "Cargo Cache"
 description: "Caches and restore your Rust build artefacts"
 inputs:
   policy:
-    description: "Whether to just 'pull' the cache, or also 'push' it"
-    default: push
+    description: "Whether to just 'pull', 'push' or 'push-pull' the cache"
+    default: push-pull
 
 runs:
   using: "composite"
   steps:
     - uses: actions/checkout@v3
     - uses: 'actions/cache@v3'
-      if: ${{ inputs.policy != 'pull' }}
+      if: ${{ inputs.policy == 'push-pull' }}
       with:
         path: |
           ~/.cargo/bin/
@@ -34,3 +34,14 @@ runs:
         key: cargo-${{ hashFiles('**/Cargo.lock') }}
         restore-keys: |
           cargo-
+
+    - uses: 'actions/cache/save@v3'
+      if: ${{ inputs.policy == 'push' }}
+      with:
+        path: |
+          ~/.cargo/bin/
+          ~/.cargo/registry/index/
+          ~/.cargo/registry/cache/
+          ~/.cargo/git/db/
+          ~/target
+        key: cargo-${{ hashFiles('**/Cargo.lock') }}
