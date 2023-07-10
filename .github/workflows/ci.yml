@@ -60,8 +60,8 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - uses: ./.github/actions/cargo-cache
-      # with:
-      #   policy: pull
+      with:
+        policy: pull
     - run: |
         cargo install cargo-deny || true
     - run: cargo deny --all-features check
@@ -72,10 +72,13 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - uses: ./.github/actions/cargo-cache
-      # with:
-      #   policy: pull
+      with:
+        policy: pull
     - run: |
-        cargo install cargo-udeps || true
+        wget https://github.com/est31/cargo-udeps/releases/download/v0.1.40/cargo-udeps-v0.1.40-x86_64-unknown-linux-gnu.tar.gz
+        tar xzf cargo-udeps-v0.1.40-x86_64-unknown-linux-gnu.tar.gz
+        mv cargo-udeps-v0.1.40-x86_64-unknown-linux-gnu ~/.cargo/bin/cargo-udeps
+    - run: |
         rustup toolchain install nightly
         rustup default nightly
     - run: cargo udeps --all-features --all-targets
