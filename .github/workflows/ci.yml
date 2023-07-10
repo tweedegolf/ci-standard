@@ -1,9 +1,13 @@
 name: CI Standard
+# the action will run when ...
 on:
+  # ... manually triggered
   workflow_dispatch:
+  # ... a commit is pushed to branch 'main'
   push:
     branches:
       - main
+  # ... a commit is pushed to a PR
   pull_request:
 
 jobs:
@@ -63,9 +67,6 @@ jobs:
       with:
         policy: pull
     - uses: EmbarkStudios/cargo-deny-action@v1
-      with:
-        command: check
-        arguments: --all-features
 
   udeps:
     runs-on: ubuntu-latest
