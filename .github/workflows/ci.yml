@@ -62,12 +62,10 @@ jobs:
     - uses: ./.github/actions/cargo-cache
       with:
         policy: pull
-    - run: |
-        cargo install cargo-deny || true
-    - uses: ./.github/actions/cargo-cache
+    - uses: EmbarkStudios/cargo-deny-action@v1
       with:
-        policy: push
-    - run: cargo deny --all-features check
+        command: check
+        arguments: --all-features
 
   udeps:
     runs-on: ubuntu-latest
