@@ -14,12 +14,17 @@ To use it, copy [ci.yml](https//github.com/tweedegolf/ci-standard/blob/main/.git
 
 The following steps are included in the CI. The steps cache whatever makes sense to cache for Rust projects (see [caching](#caching) for more details).
 
+### Linting
 - `cargo format`
+
+### Build
 - `cargo build`
-- `cargo check`
 - `cargo clippy`
 - `cargo test`
+
+### Code quality
 - `cargo deny`
+- `cargo outdated`
 - `cargo udeps` (nightly)
 
 ## Caching
