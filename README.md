@@ -12,29 +12,26 @@ To use it, copy [ci.yml](https//github.com/tweedegolf/ci-standard/blob/main/.git
 
 ## Steps included
 
-The following steps are included in the CI. The build phase caches whatever makes sense to cache for Rust projects (see [caching](#caching) for more details).
+The following steps are included in the CI. The steps cache whatever makes sense to cache for Rust projects (see [caching](#caching) for more details).
 
-### Build
-- cargo build
-
-### Lint
 - `cargo format`
+- `cargo build`
 - `cargo check`
 - `cargo clippy`
 - `cargo test`
 - `cargo deny`
 - `cargo udeps` (nightly)
 
-
 ## Caching
 
-Caching is provided on the following directories in order to speed up the linting steps:
-```
-.cargo/bin/
-.cargo/registry/index/
-.cargo/registry/cache/
-.cargo/git/db/
-target
+Caching is provided on the following directories in order to speed up steps:
+```yaml
+path: |
+  .cargo/bin/
+  .cargo/registry/index/
+  .cargo/registry/cache/
+  .cargo/git/db/
+  target
 ```
 
 ## Customising
