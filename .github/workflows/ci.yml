@@ -41,7 +41,7 @@ jobs:
         key: build
     - run: cargo build --all-features --all-targets --release
 
-  check:
+  build-check:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -52,7 +52,7 @@ jobs:
 
   clippy:
     runs-on: ubuntu-latest
-    needs: check
+    needs: build-check
     steps:
     - uses: actions/checkout@v3
     - uses: Swatinem/rust-cache@v2
@@ -61,7 +61,7 @@ jobs:
         save-if: false
     - run: cargo clippy --all-features --all-targets -- --deny clippy::all
 
-  build-test:
+  build-tests:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -72,7 +72,7 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
-    needs: build-test
+    needs: build-tests
     steps:
     - uses: actions/checkout@v3
     - uses: Swatinem/rust-cache@v2
@@ -80,6 +80,18 @@ jobs:
         key: test
         save-if: false
     - run: cargo test --all-features --all-targets
+
+  build-nightly:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: Swatinem/rust-cache@v2
+      with:
+        key: nightly
+    - run: |
+        rustup toolchain install nightly
+        rustup default nightly
+    - run: cargo +nightly build --all-features --all-targets
 
   udeps:
     runs-on: ubuntu-latest
