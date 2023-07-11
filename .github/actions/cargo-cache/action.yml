@@ -4,6 +4,9 @@ inputs:
   policy:
     description: "Whether to just 'pull', 'push' or 'push-pull' the cache"
     default: push-pull
+  key:
+    description: "Prefix of the key to be used"
+    default: cargo
 
 runs:
   using: "composite"
@@ -17,8 +20,8 @@ runs:
           ~/.cargo/registry/index/
           ~/.cargo/registry/cache/
           ~/.cargo/git/db/
-          ~/target
-        key: cargo-${{ hashFiles('**/Cargo.lock') }}
+          ~/target/
+        key: ${{ key }}-${{ hashFiles('**/Cargo.toml') }}-${{ hashFiles('**/Cargo.lock') }}
         restore-keys: |
           cargo-
 
@@ -30,8 +33,8 @@ runs:
           ~/.cargo/registry/index/
           ~/.cargo/registry/cache/
           ~/.cargo/git/db/
-          ~/target
-        key: cargo-${{ hashFiles('**/Cargo.lock') }}
+          ~/target/
+        key: ${{ key }}-${{ hashFiles('**/Cargo.toml') }}-${{ hashFiles('**/Cargo.lock') }}
         restore-keys: |
           cargo-
 
@@ -43,5 +46,6 @@ runs:
           ~/.cargo/registry/index/
           ~/.cargo/registry/cache/
           ~/.cargo/git/db/
-          ~/target
-        key: cargo-${{ hashFiles('**/Cargo.lock') }}
+          ~/target/
+        key: ${{ key }}-${{ hashFiles('**/Cargo.toml') }}-${{ hashFiles('**/Cargo.lock') }}
+
