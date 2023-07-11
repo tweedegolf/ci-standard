@@ -33,7 +33,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - uses: EmbarkStudios/cargo-deny-action@v1
+    - uses: ./.github/actions/cargo-deny
 
   build:
     runs-on: ubuntu-latest
@@ -72,12 +72,5 @@ jobs:
     - uses: Swatinem/rust-cache@v2
       with:
         prefix-key: cargo
-        shared-key: nightly
-    - run: |
-        wget https://github.com/est31/cargo-udeps/releases/download/v0.1.40/cargo-udeps-v0.1.40-x86_64-unknown-linux-gnu.tar.gz
-        tar xzf cargo-udeps-v0.1.40-x86_64-unknown-linux-gnu.tar.gz
-        mv cargo-udeps-v0.1.40-x86_64-unknown-linux-gnu/cargo-udeps ~/.cargo/bin/cargo-udeps
-    - run: |
-        rustup toolchain install nightly
-        rustup default nightly
-    - run: cargo udeps --all-features --all-targets
+        shared-key: udeps
+    - uses: ./.github/actions/cargo-udeps

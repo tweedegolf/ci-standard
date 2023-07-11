@@ -1,0 +1,44 @@
+name: "cargo-deny"
+description: "Help manage Cargo crate dependencies and validate licenses"
+
+inputs:
+  version:
+    description: "The version of `cargo-deny` to install"
+    required: false
+    default: "0.13.9"
+  target:
+    description: "The binary target to download"
+    required: false
+    default: "x86_64-unknown-linux-musl"
+  log-level:
+    description: "The log level for `cargo-deny`"
+    required: false
+    default: "warn"
+  arguments:
+    description: "The arguments to pass to `cargo-deny`"
+    required: false
+    default: "--all-features"
+  command:
+    description: "The command to run with `cargo-deny`"
+    required: false
+    default: "check"
+  command-arguments:
+    description: "The arguments to pass to the command"
+    required: false
+    default: ""
+  rust-version:
+    description: "The Rust version that is updated to before running cargo deny"
+    required: false
+    default: ""
+
+runs:
+  using: "composite"
+  steps:
+    - run: |
+        curl -f --show-error --silent -L https://github.com/EmbarkStudios/cargo-deny/releases/download/${{ inputs.version }}/cargo-deny-${{ inputs.version }}-${{ inputs.target }}.tar.gz | tar -xz -C ~/.cargo/bin/ --strip-components=1 cargo-deny-${{ inputs.version }}-${{ inputs.target }}/cargo-deny
+      shell: bash
+    - run: |
+        rustup default ${{ inputs.rust-version }}
+      shell: bash
+    - run: cargo deny --log-level ${{ inputs.log-level }} ${{ inputs.arguments }} ${{ inputs.command }} ${{ inputs.command-arguments }}
+      shell: bash
