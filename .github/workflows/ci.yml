@@ -41,27 +41,48 @@ jobs:
         key: build
     - run: cargo build --all-features --all-targets --release
 
-  clippy:
+  check:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
     - uses: Swatinem/rust-cache@v2
       with:
         key: check
+    - run: cargo check
+
+  clippy:
+    runs-on: ubuntu-latest
+    needs: check
+    steps:
+    - uses: actions/checkout@v3
+    - uses: Swatinem/rust-cache@v2
+      with:
+        key: check
+        save-if: false
     - run: cargo clippy --all-features --all-targets -- --deny clippy::all
 
-  test:
+  build-test:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
     - uses: Swatinem/rust-cache@v2
       with:
         key: test
+    - run: cargo build --tests --all-features --all-targets
+
+  test:
+    runs-on: ubuntu-latest
+    needs: build-test
+    steps:
+    - uses: actions/checkout@v3
+    - uses: Swatinem/rust-cache@v2
+      with:
+        key: test
+        save-if: false
     - run: cargo test --all-features --all-targets
 
   udeps:
     runs-on: ubuntu-latest
-    needs: build
     steps:
     - uses: actions/checkout@v3
     - uses: Swatinem/rust-cache@v2
