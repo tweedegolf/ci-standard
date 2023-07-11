@@ -10,6 +10,9 @@ on:
   # ... a commit is pushed to a PR
   pull_request:
 
+env:
+  CARGO_TERM_COLOR: always
+
 jobs:
   # no cache needed for rustfmt
   format:
@@ -39,83 +42,37 @@ jobs:
     - uses: Swatinem/rust-cache@v2
       with:
         prefix-key: cargo
-        key: build
-        shared-key: cargo-build
+        shared-key: build
     - run: cargo build --all-features --all-targets --release
-
-  build-check:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    - uses: Swatinem/rust-cache@v2
-      with:
-        prefix-key: cargo
-        key: build
-        shared-key: cargo-check
-    - run: cargo check --all-features --all-targets
 
   clippy:
     runs-on: ubuntu-latest
-    needs: build-check
     steps:
     - uses: actions/checkout@v3
     - uses: Swatinem/rust-cache@v2
       with:
         prefix-key: cargo
-        key: build
-        shared-key: cargo-check
-        save-if: false
+        shared-key: check
     - run: cargo clippy --all-features --all-targets -- --deny clippy::all
-
-  build-tests:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    - uses: Swatinem/rust-cache@v2
-      with:
-        prefix-key: cargo
-        key: build
-        shared-key: cargo-test
-    - run: cargo build --tests --all-features --all-targets
 
   test:
     runs-on: ubuntu-latest
-    needs: build-tests
     steps:
     - uses: actions/checkout@v3
     - uses: Swatinem/rust-cache@v2
       with:
         prefix-key: cargo
-        key: build
-        shared-key: cargo-test
-        save-if: false
+        shared-key: test
     - run: cargo test --all-features --all-targets
-
-  build-nightly:
-    runs-on: ubuntu-latest
-    steps:
-    - uses: actions/checkout@v3
-    - uses: Swatinem/rust-cache@v2
-      with:
-        prefix-key: cargo
-        key: build
-        shared-key: cargo-nightly
-    - run: |
-        rustup toolchain install nightly
-        rustup default nightly
-    - run: cargo +nightly build --all-features --all-targets
 
   udeps:
     runs-on: ubuntu-latest
-    needs: build-nightly
     steps:
     - uses: actions/checkout@v3
     - uses: Swatinem/rust-cache@v2
       with:
         prefix-key: cargo
-        key: build
-        shared-key: cargo-nightly
-        save-if: false
+        shared-key: nightly
     - run: |
         wget https://github.com/est31/cargo-udeps/releases/download/v0.1.40/cargo-udeps-v0.1.40-x86_64-unknown-linux-gnu.tar.gz
         tar xzf cargo-udeps-v0.1.40-x86_64-unknown-linux-gnu.tar.gz
