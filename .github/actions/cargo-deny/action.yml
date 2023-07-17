@@ -37,7 +37,7 @@ runs:
   steps:
     - run: |
         curl -f --show-error --silent -L https://github.com/EmbarkStudios/cargo-deny/releases/download/${{ inputs.version }}/cargo-deny-${{ inputs.version }}-${{ inputs.target }}.tar.gz |
-        tar -xz -C ~/.cargo/bin/ --strip-components=1 cargo-deny-${{ inputs.version }}-${{ inputs.target }}/cargo-deny
+        | tar -xz -C ~/.cargo/bin/ --strip-components=1 cargo-deny-${{ inputs.version }}-${{ inputs.target }}/cargo-deny
       shell: bash
     - run: |
         rustup default ${{ inputs.rust-version }}
