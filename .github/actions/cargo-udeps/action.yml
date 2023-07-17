@@ -6,7 +6,7 @@ inputs:
   version:
     description: "The version of `cargo-udeps` to install"
     required: true
-    default: "v0.1.40"
+    default: ""
   target:
     description: "The binary target to download"
     required: true
@@ -20,8 +20,8 @@ runs:
   using: "composite"
   steps:
     - run: |
-        curl -f --show-error --silent -L https://github.com/est31/cargo-udeps/releases/download/${{ inputs.version }}/cargo-udeps-${{ inputs.version }}-${{ inputs.target }}.tar.gz |
-        tar -xz -C ~/.cargo/bin/ --strip-components=2 ./cargo-udeps-${{ inputs.version }}-${{ inputs.target }}/cargo-udeps
+        gh release download ${{ inputs.version }} -p '*-${{ inputs.target }}.tar.gz' -O - -R est31/cargo-udeps
+        | tar -xz -C ~/.cargo/bin/ --strip-components=2 ./cargo-udeps-*/cargo-udeps
       shell: bash
     - run: |
         rustup toolchain install nightly
