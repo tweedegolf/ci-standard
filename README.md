@@ -12,29 +12,31 @@ To use it, copy [ci.yml](https//github.com/tweedegolf/ci-standard/blob/main/.git
 
 ## Steps included
 
-The following steps are included in the CI. The build phase caches whatever makes sense to cache for Rust projects (see [caching](#caching) for more details).
+The following steps are included in the CI. The steps cache whatever makes sense to cache for Rust projects (see [caching](#caching) for more details).
+
+### Linting
+- `cargo format`
 
 ### Build
-- cargo build
-
-### Lint
-- `cargo format`
-- `cargo check`
+- `cargo build`
 - `cargo clippy`
 - `cargo test`
-- `cargo deny`
-- `cargo udeps` (nightly)
 
+### Code quality
+- `cargo deny`
+- `cargo outdated`
+- `cargo udeps` (nightly)
 
 ## Caching
 
-Caching is provided on the following directories in order to speed up the linting steps:
-```
-.cargo/bin/
-.cargo/registry/index/
-.cargo/registry/cache/
-.cargo/git/db/
-target
+Caching is stable over multiple jobs using [Swatinem/rust-cache](https://github.com/Swatinem/rust-cache) on the following directories:
+```yaml
+path: |
+  .cargo/bin/
+  .cargo/registry/index/
+  .cargo/registry/cache/
+  .cargo/git/db/
+  target
 ```
 
 ## Customising
@@ -51,10 +53,11 @@ deny:
   needs: build
   steps:
   - uses: actions/checkout@v3
-  - uses: ./.github/actions/cargo-cache
+  - uses: Swatinem/rust-cache@v2
     with:
-      policy: pull
-  - uses: EmbarkStudios/cargo-deny-action@v1
+      prefix-key: cargo
+      shared-key: build
+  - uses: tweedegolf/ci-standard/.github/actions/cargo-deny@main
 +    with:
 +      command: check advisories bans sources
 ```
@@ -81,9 +84,10 @@ test:
 +        - 5432:5432
   steps:
   - uses: actions/checkout@v3
-  - uses: ./.github/actions/cargo-cache
+  - uses: Swatinem/rust-cache@v2
     with:
-      policy: pull
+      prefix-key: cargo
+      shared-key: test
   - run: cargo test --all-features --all-targets
 ```
 

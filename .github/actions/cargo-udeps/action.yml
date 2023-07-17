@@ -1,0 +1,31 @@
+# heavily based on https://github.com/aig787/cargo-udeps-action
+name: "cargo-udeps"
+description: "Detect unused dependencies in your Rust project"
+
+inputs:
+  version:
+    description: "The version of `cargo-udeps` to install"
+    required: true
+    default: "v0.1.40"
+  target:
+    description: "The binary target to download"
+    required: true
+    default: "x86_64-unknown-linux-gnu"
+  arguments:
+    required: false
+    description: "The arguments to pass to `cargo-udeps`"
+    default: ""
+
+runs:
+  using: "composite"
+  steps:
+    - run: |
+        curl -f --show-error --silent -L https://github.com/est31/cargo-udeps/releases/download/${{ inputs.version }}/cargo-udeps-${{ inputs.version }}-${{ inputs.target }}.tar.gz |
+        tar -xz -C ~/.cargo/bin/ --strip-components=2 ./cargo-udeps-${{ inputs.version }}-${{ inputs.target }}/cargo-udeps
+      shell: bash
+    - run: |
+        rustup toolchain install nightly
+        rustup default nightly
+      shell: bash
+    - run: cargo udeps ${{ inputs.arguments }}
+      shell: bash
