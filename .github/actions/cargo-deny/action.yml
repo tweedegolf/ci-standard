@@ -6,7 +6,7 @@ inputs:
   version:
     description: "The version of `cargo-deny` to install"
     required: false
-    default: ""
+    default: "0.13.9"
   target:
     description: "The binary target to download"
     required: false
@@ -36,8 +36,8 @@ runs:
   using: "composite"
   steps:
     - run: |
-        gh release download ${{ inputs.version }} -p '*-${{ inputs.target }}.tar.gz' -O - -R EmbarkStudios/cargo-deny
-        | tar -xz -C ~/.cargo/bin/ --strip-components=1 "cargo-deny-*/cargo-deny"
+        curl -f --show-error --silent -L https://github.com/EmbarkStudios/cargo-deny/releases/download/${{ inputs.version }}/cargo-deny-${{ inputs.version }}-${{ inputs.target }}.tar.gz \
+        | tar -xz -C ~/.cargo/bin/ --strip-components=1 cargo-deny-${{ inputs.version }}-${{ inputs.target }}/cargo-deny
       shell: bash
     - run: |
         rustup default ${{ inputs.rust-version }}
