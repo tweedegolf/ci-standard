@@ -29,7 +29,7 @@ The following steps are included in the CI. The steps cache whatever makes sense
 
 ## Caching
 
-Caching is provided on the following directories in order to speed up steps:
+Caching is stable over multiple jobs using [Swatinem/rust-cache](https://github.com/Swatinem/rust-cache) on the following directories:
 ```yaml
 path: |
   .cargo/bin/
@@ -53,10 +53,11 @@ deny:
   needs: build
   steps:
   - uses: actions/checkout@v3
-  - uses: ./.github/actions/cargo-cache
+  - uses: Swatinem/rust-cache@v2
     with:
-      policy: pull
-  - uses: EmbarkStudios/cargo-deny-action@v1
+      prefix-key: cargo
+      shared-key: build
+  - uses: tweedegolf/ci-standard/.github/actions/cargo-deny@main
 +    with:
 +      command: check advisories bans sources
 ```
@@ -83,9 +84,10 @@ test:
 +        - 5432:5432
   steps:
   - uses: actions/checkout@v3
-  - uses: ./.github/actions/cargo-cache
+  - uses: Swatinem/rust-cache@v2
     with:
-      policy: pull
+      prefix-key: cargo
+      shared-key: test
   - run: cargo test --all-features --all-targets
 ```
 

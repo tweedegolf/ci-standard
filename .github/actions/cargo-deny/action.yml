@@ -1,3 +1,4 @@
+# heavily based on https://github.com/EmbarkStudios/cargo-deny-action
 name: "cargo-deny"
 description: "Help manage Cargo crate dependencies and validate licenses"
 
@@ -35,7 +36,8 @@ runs:
   using: "composite"
   steps:
     - run: |
-        curl -f --show-error --silent -L https://github.com/EmbarkStudios/cargo-deny/releases/download/${{ inputs.version }}/cargo-deny-${{ inputs.version }}-${{ inputs.target }}.tar.gz | tar -xz -C ~/.cargo/bin/ --strip-components=1 cargo-deny-${{ inputs.version }}-${{ inputs.target }}/cargo-deny
+        curl -f --show-error --silent -L https://github.com/EmbarkStudios/cargo-deny/releases/download/${{ inputs.version }}/cargo-deny-${{ inputs.version }}-${{ inputs.target }}.tar.gz |
+        tar -xz -C ~/.cargo/bin/ --strip-components=1 cargo-deny-${{ inputs.version }}-${{ inputs.target }}/cargo-deny
       shell: bash
     - run: |
         rustup default ${{ inputs.rust-version }}

@@ -33,7 +33,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    - uses: ./.github/actions/cargo-deny
+    - uses: tweedegolf/ci-standard/.github/actions/cargo-deny@main
 
   build:
     runs-on: ubuntu-latest
@@ -73,4 +73,4 @@ jobs:
       with:
         prefix-key: cargo
         shared-key: udeps
-    - uses: ./.github/actions/cargo-udeps
+    - uses: tweedegolf/ci-standard/.github/actions/cargo-udeps@main
