@@ -7,7 +7,7 @@ See [CI Standard](https://tgrep.nl/tweedegolf/ci-standard) for the GitLab versio
 
 ## Usage
 
-To use it, copy [ci.yml](https//github.com/tweedegolf/ci-standard/blob/main/.github/workflows/ci.yml) into your GitHub project. For some steps you might want to include some extra steps, see [customising](#customising) for examples.
+To use it, copy [.github/workflows/ci.yml](https//github.com/tweedegolf/ci-standard/blob/main/.github/workflows/ci.yml) into your GitHub project. For some steps you might want to include extra steps, see [customising](#customising) for examples.
 
 
 ## Steps included
@@ -42,7 +42,7 @@ path: |
 ## Customising
 No project is the same, therefore, feel free to customise your setup. Here are some examples:
 
-### cargo-deny
+### `cargo-deny`
 
 [`cargo deny`](https://github.com/EmbarkStudios/cargo-deny) expects a [`deny.toml`](https://github.com/tweedegolf/ci-standard/blob/main/deny.toml) in order to be able to check which licenses are allowed. Add it using `cargo deny init` and configure it as described in [the book](https://embarkstudios.github.io/cargo-deny/checks/cfg.html).
 
@@ -63,7 +63,7 @@ deny:
 ```
 
 
-### cargo test
+### `cargo test`
 
 In order to be able to run `cargo test`, one might need some extra services. For example, if you need a postgres container, the following might work:
 ```diff
