@@ -6,7 +6,7 @@ inputs:
   version:
     description: "The version of `cargo-udeps` to install"
     required: true
-    default: "v0.1.40"
+    default: ""
   target:
     description: "The binary target to download"
     required: true

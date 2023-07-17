@@ -6,7 +6,7 @@ inputs:
   version:
     description: "The version of `cargo-deny` to install"
     required: false
-    default: "0.13.9"
+    default: ""
   target:
     description: "The binary target to download"
     required: false
